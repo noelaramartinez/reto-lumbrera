@@ -27,10 +27,13 @@ public class CompanyService {
      */
     public List<Companies> getAll() {
 
-        final List<Companies> companies = (List<Companies>) companyRepository.findAll();
+        try {
+            return (List<Companies>) companyRepository.findAll();
+        } catch (final Exception e) {
+            LOGGER.error(e.getMessage());
+        }
 
-        return companies;
-
+        return null;
     }
 
     /*
@@ -41,12 +44,10 @@ public class CompanyService {
      */
     public Companies add(final Companies company) {
 
-        LOGGER.info(company.toString());
-
-        final Companies c = companyRepository.save(company);
-
-        if (c != null) {
-            return c;
+        try {
+            return companyRepository.save(company);
+        } catch (final Exception e) {
+            LOGGER.error(e.getMessage());
         }
 
         return null;

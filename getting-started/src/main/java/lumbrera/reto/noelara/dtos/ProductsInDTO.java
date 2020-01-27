@@ -5,7 +5,7 @@ import java.util.List;
 import lumbrera.reto.noelara.models.Companies;
 import lumbrera.reto.noelara.models.Variations;
 
-public class ProductsDTO {
+public class ProductsInDTO {
 
     // this class is utilized to transport data between classes, obtained from
     // requests or any other source
@@ -18,14 +18,34 @@ public class ProductsDTO {
     // the price of the product
     private float price;
     // if the product has iva
-    private boolean hasIva;
+    private Boolean hasIva;
     // the product's id
     private long id;
     // the company related to an specific product
-    private Companies Companies;
+    private Companies companies;
 
     // list with variations of a product
-    private List<Variations> liVariations;
+    private List<Variations> variations;
+
+    /*
+     * Method get the product's id
+     *
+     * @return product's id
+     *
+     */
+    public long getId() {
+        return id;
+    }
+
+    /*
+     * Method set the product's id
+     *
+     * @param product's id
+     *
+     */
+    public void setId(final long id) {
+        this.id = id;
+    }
 
     /*
      * Method get the name of a product
@@ -113,7 +133,7 @@ public class ProductsDTO {
      * @return hasIva if the product has iva
      *
      */
-    public boolean isHasIva() {
+    public Boolean isHasIva() {
         return hasIva;
     }
 
@@ -123,7 +143,7 @@ public class ProductsDTO {
      * @param hasIva if the product has iva
      *
      */
-    public void setHasIva(final boolean hasIva) {
+    public void setHasIva(final Boolean hasIva) {
         this.hasIva = hasIva;
     }
 
@@ -153,8 +173,8 @@ public class ProductsDTO {
      * @return liVariations a list with variations
      *
      */
-    public List<Variations> getLiVariations() {
-        return liVariations;
+    public List<Variations> getVariations() {
+        return variations;
     }
 
     /*
@@ -163,8 +183,8 @@ public class ProductsDTO {
      * @param liVariations a list with variations
      *
      */
-    public void setLiVariations(final List<Variations> liVariations) {
-        this.liVariations = liVariations;
+    public void setVariations(final List<Variations> variations) {
+        this.variations = variations;
     }
 
     /*
@@ -174,7 +194,7 @@ public class ProductsDTO {
      *
      */
     public Companies getCompanies() {
-        return Companies;
+        return companies;
     }
 
     /*
@@ -184,7 +204,83 @@ public class ProductsDTO {
      *
      */
     public void setCompanies(final Companies companies) {
-        Companies = companies;
+        this.companies = companies;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((companies == null) ? 0 : companies.hashCode());
+        result = prime * result + Float.floatToIntBits(cost);
+        result = prime * result + ((hasIva == null) ? 0 : hasIva.hashCode());
+        result = prime * result + (int) (id ^ (id >>> 32));
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + Float.floatToIntBits(price);
+        result = prime * result + (int) (stock ^ (stock >>> 32));
+        result = prime * result + ((variations == null) ? 0 : variations.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProductsInDTO other = (ProductsInDTO) obj;
+        if (companies == null) {
+            if (other.companies != null) {
+                return false;
+            }
+        } else if (!companies.equals(other.companies)) {
+            return false;
+        }
+        if (Float.floatToIntBits(cost) != Float.floatToIntBits(other.cost)) {
+            return false;
+        }
+        if (hasIva == null) {
+            if (other.hasIva != null) {
+                return false;
+            }
+        } else if (!hasIva.equals(other.hasIva)) {
+            return false;
+        }
+        if (id != other.id) {
+            return false;
+        }
+        if (name == null) {
+            if (other.name != null) {
+                return false;
+            }
+        } else if (!name.equals(other.name)) {
+            return false;
+        }
+        if (Float.floatToIntBits(price) != Float.floatToIntBits(other.price)) {
+            return false;
+        }
+        if (stock != other.stock) {
+            return false;
+        }
+        if (variations == null) {
+            if (other.variations != null) {
+                return false;
+            }
+        } else if (!variations.equals(other.variations)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductsInDTO [name=" + name + ", stock=" + stock + ", cost=" + cost + ", price=" + price + ", hasIva=" + hasIva + ", id="
+                + id + ", companies=" + companies + ", variations=" + variations + "]";
     }
 
 }

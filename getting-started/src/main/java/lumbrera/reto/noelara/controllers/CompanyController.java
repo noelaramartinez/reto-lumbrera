@@ -1,21 +1,22 @@
 package lumbrera.reto.noelara.controllers;
 
+import java.io.InputStream;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jboss.logging.Logger;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import lumbrera.reto.noelara.commons.InputStreamToStringParser;
 import lumbrera.reto.noelara.models.Companies;
 import lumbrera.reto.noelara.services.CompanyService;
 
@@ -24,15 +25,21 @@ public class CompanyController {
 
     private static final Logger LOGGER = Logger.getLogger("ListenerBean");
 
+    // service for using crud methods for Companies
     @Inject
     CompanyService companyService;
 
-    Gson gson = new Gson();
+    // Parser for InputStream to String format
+    @Inject
+    InputStreamToStringParser inputStreamToStringParser;
+
+    // gson to handle json Strings
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     /*
-     * Metodo para obtener todas las compañías registradas
+     * Method to get all registered companies
      *
-     * @return companies at the companies endpoint
+     * @return companies the companies in database
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -44,28 +51,21 @@ public class CompanyController {
     }
 
     /*
-     * Metodo para agregar una compañía
+     * Method to add a company
      *
-     * @param instance of type company
+     * @param companies the company added to data base in json format
+     *
+     * @return inputStream data from POST request
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/add")
-    public String addCompany(@DefaultValue("green") @QueryParam("company") String company) {
+    public String addCompany(final InputStream inputStream) {
 
-        LOGGER.info("dentrode add");
-        LOGGER.info(company);
-        company = "{\n" + "\n" + "        \"name\":\"compumatico\"\n" + "\n" + "}";
-        LOGGER.info(company);
-        final Companies companies = gson.fromJson(company, Companies.class);
+        final Companies c = gson.fromJson(inputStreamToStringParser.inputStreamToString(inputStream), Companies.class);
 
-        LOGGER.info(companies.getName());
-        LOGGER.info(companies.getId());
-
-        final Companies c = companyService.add(companies);
-
-        return gson.toJson(c);
+        return gson.toJson(companyService.add(c));
     }
 
 }

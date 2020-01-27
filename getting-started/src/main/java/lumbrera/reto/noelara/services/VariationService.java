@@ -1,9 +1,14 @@
 package lumbrera.reto.noelara.services;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
+import javax.ws.rs.NotFoundException;
+
+import org.jboss.logging.Logger;
 
 import lumbrera.reto.noelara.models.Variations;
 import lumbrera.reto.noelara.repositories.VariationRepository;
@@ -11,39 +16,46 @@ import lumbrera.reto.noelara.repositories.VariationRepository;
 @ApplicationScoped
 public class VariationService {
 
-    // repository with in box methods to handle CRUD operations for Variation
-    // object
     @Inject
     private VariationRepository variationRepository;
 
+    private static final Logger LOGGER = Logger.getLogger("ListenerBean");
+
     /*
-     * Method to add variations
+     * Method to add a list of variations
      *
-     * @param variations the variation to be added or updated
-     *
+     * @param itVariations an Iterable of type Variations
      *
      */
-    public void add(final Variations variations) {
+    @Transactional
+    public List<Variations> addAll(final Iterable<Variations> itVariations) throws Exception {
 
-        boolean isvalid = true;
+        return (List<Variations>) variationRepository.saveAll(itVariations);
 
-        // getting variation if exist
-        final Optional<Variations> c = variationRepository.findById(variations.getProducts().getId());
+    }
 
-        // adding validations
-        if (variations.getStock() <= 0 || c == null) {
-            isvalid = false;
-        }
+    /*
+     * Method to add a Variation
+     *
+     * @param variations an Object of type Variations
+     *
+     */
+    @Transactional
+    public Variations add(final Variations variations) throws Exception {
 
-        // if is valid, the object is added
-        if (isvalid) {
-            final Variations v = new Variations();
-            v.setBrand(variations.getBrand());
-            v.setName(variations.getName());
-            v.setProducts(variations.getProducts());
-            v.setSku(variations.getSku());
-            v.setStock(variations.getStock());
-            variationRepository.save(v);
-        }
+        return variationRepository.save(variations);
+
+    }
+
+    /*
+     * Method to add a Variation
+     *
+     * @param variations an Object of type Variations
+     *
+     */
+    public Variations findVariationById(final long id) throws NotFoundException, NoSuchElementException {
+
+        return variationRepository.findById(id).get();
+
     }
 }

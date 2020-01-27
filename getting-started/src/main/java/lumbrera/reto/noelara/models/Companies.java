@@ -1,10 +1,12 @@
 package lumbrera.reto.noelara.models;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+@ApplicationScoped
 @Entity
 public class Companies {
 
@@ -120,6 +122,22 @@ public class Companies {
      */
     @Override
     public String toString() {
+
+        int count = 0;
+        int x = 3;
+        while (count++ < 3) {
+            final int y = (1 + 2 * count) % 3;
+            switch (y) {
+            default:
+            case 0:
+                x -= 1;
+                break;
+            case 1:
+                x += 5;
+            }
+        }
+        System.out.println(x);
+
         return "Companies [id=" + id + ", name=" + name + "]";
     }
 
